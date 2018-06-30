@@ -1,0 +1,29 @@
+{
+	"name": "studysys_client",
+	"version": "1.0.0",
+	"main": "index.js",
+	"author": "tu",
+	"license": "MIT",
+	"scripts": {
+		"build": "./node_modules/.bin/webpack --mode production --config webpack.prod.js --color --progress",
+		"dev": "./node_modules/.bin/webpack-dev-server --mode development --config webpack.dev.js --host 0.0.0.0",
+		"serve": "yarn build && serve -p 8080 ./build"
+	},
+	"devDependencies": {
+		"babel-core": "^6.26.3",
+		"babel-loader": "^7.1.4",
+		"babel-preset-env": "^1.7.0",
+		"babel-preset-react": "^6.24.1",
+		"babel-preset-stage-0": "^6.24.1",
+		"clean-webpack-plugin": "^0.1.19",
+		"html-webpack-plugin": "^3.2.0",
+		"serve": "^9.1.0",
+		"webpack": "^4.13.0",
+		"webpack-cli": "^3.0.8",
+		"webpack-dev-server": "^3.1.4"
+	},
+	"dependencies": {
+		"react": "^16.4.1",
+		"react-dom": "^16.4.1"
+	}
+}

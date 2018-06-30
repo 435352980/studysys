@@ -59,3 +59,12 @@ typings/
 
 # next.js build output
 .next
+
+# extra
+.DS_Store
+study
+dist
+build
+mongo/
+redis/
+yarn.lock
