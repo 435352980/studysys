@@ -11,7 +11,7 @@ module.exports = {
 		extensions: [ '.js', '.jsx', '.json' ]
 	},
 	entry: {
-		app: path.join(SOURCE_DIR, 'pages/app.jsx')
+		app: path.join(SOURCE_DIR, 'pages/App.jsx')
 	},
 	output: {
 		path: BUILD_DIR,
