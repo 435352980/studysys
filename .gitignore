@@ -68,3 +68,4 @@ build
 mongo/
 redis/
 yarn.lock
+study.md
