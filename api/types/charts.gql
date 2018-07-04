@@ -1,0 +1,26 @@
+type Query {
+	#获取图表数据
+	charts: Charts
+}
+
+#图表集合
+type Charts {
+	#柱形图
+	barChart: BarChart
+	#条形图
+	pieChart: [PieChart]
+}
+
+#柱图
+type BarChart {
+	#类别
+	category: [String]
+	#数据
+	data: [Int]
+}
+
+#饼图
+type PieChart {
+	name: String
+	value: Int
+}

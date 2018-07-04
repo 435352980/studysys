@@ -1,0 +1,12 @@
+query fetchChartsData {
+	charts {
+		barChart {
+			category
+			data
+		}
+		pieChart {
+			name
+			value
+		}
+	}
+}

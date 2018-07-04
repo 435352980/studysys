@@ -5,7 +5,6 @@ const path = require('path'); //路径
 const webpack = require('webpack');
 const CleanPlugin = require('clean-webpack-plugin'); //打包时清除指定文件/文件夹
 const HtmlPlugin = require('html-webpack-plugin'); //加载html模板，引入js文件
-const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin'); //用来引入编译的dll文件到html但会触发webpack插件过时警告
 const ProgressBarPlugin = require('progress-bar-webpack-plugin'); //命令行进度条插件
 
 const HappyPack = require('HappyPack'); //多线程打包优化
@@ -22,13 +21,16 @@ const BUILD_DIR = path.resolve('./build');
 const isDevelopment = process.env.NODE_ENV === 'development';
 
 const devtool = isDevelopment ? { devtool: 'eval-source-map' } : null;
-// const devServerConfig = isDevelopment ? { contentBase: path.join(BUILD_DIR) } : null; //静态文件根目录
+const devServerConfig = isDevelopment ? { contentBase: path.join(BUILD_DIR) } : null; //静态文件根目录
 
 const config = {
 	mode: process.env.NODE_ENV,
 	...devtool,
 	resolve: {
-		extensions: [ '.js', '.jsx', '.json', '.less' ]
+		extensions: [ '.js', '.jsx', '.json', '.gql', '.less' ]
+	},
+	externals: {
+		echarts: 'echarts'
 	},
 	entry: {
 		app: path.join(SOURCE_DIR, 'App.jsx')
@@ -38,7 +40,7 @@ const config = {
 		filename: 'js/[name][chunkhash:16].js'
 		// publicPath : //可以用于配置CDN
 	},
-	// devServer: { ...devServerConfig },
+	devServer: { ...devServerConfig },
 	module: {
 		rules: [
 			{
@@ -81,6 +83,11 @@ const config = {
 			{
 				test: /\.(eot|svg|ttf|woff|woff2|otf)$/,
 				use: [ { loader: 'url-loader', options: { limit: 8192, name: 'assets/[name].[ext]' } } ]
+			},
+			{
+				test: /\.(graphql|gql)$/,
+				exclude: /node_modules/,
+				loader: 'graphql-tag/loader'
 			}
 		]
 	},
@@ -122,6 +129,7 @@ const config = {
 					options: {
 						presets: [ 'react', [ 'env', { module: false } ], 'stage-0' ],
 						plugins: [
+							'transform-decorators-legacy',
 							[ 'import', { libraryName: 'antd', libraryDirectory: 'es', style: true } ]
 						] // `style: true` 会加载 less 文件]
 					}
@@ -145,10 +153,9 @@ const config = {
 			template: path.join(SOURCE_DIR, 'index.html'),
 			filename: 'index.html',
 			chunks: [ 'common', 'app' ],
-			// vendor: 'vendor/vendor.dll.js',
+			vendor: 'vendor/vendor.dll.js',
 			inject: 'body'
 		}),
-		new AddAssetHtmlPlugin({ includeSourcemap: false, filepath: path.join(BUILD_DIR, 'vendor', '*.js') }),
 		new MiniCssExtractPlugin({
 			filename: 'css/[name][chunkhash:16].css'
 		}),

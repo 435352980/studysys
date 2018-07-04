@@ -1,0 +1,29 @@
+#用户
+type User {
+	#注册日期
+	signdate: String
+	#登录名
+	username: String
+	#昵称
+	nickname: String
+	#性别
+	gender: String
+	#邮箱
+	email: String
+	#自我介绍
+	description: String
+	#图标
+	icon: String
+	#角色
+	role: Int
+}
+
+type Query {
+	#查询用户列表
+	getUser: [User]
+}
+
+type Mutation {
+	#新用户注册
+	signUser(username: String, password: String, nickname: String, gender: String, email: String): String
+}
