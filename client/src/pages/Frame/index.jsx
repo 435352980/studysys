@@ -7,58 +7,70 @@ import { push } from 'react-router-redux';
 import classNames from 'classnames';
 import PageMenu from '../../components/PageMenu';
 import { MENU_CONFIG, MENU_DOC } from '../../config';
-import { buildRelationFromDoc } from '../../lib/relation';
+import { buildRelationFromDoc, getParents } from '../../lib/relation';
 import frameStyle from './frame.less';
 
 import Charts from '../Charts';
+import GdMap from '../GdMap';
 
 const { Header, Content, Footer, Sider } = Layout;
 
 @connect(state => ({ router: state.router }), dispatch => ({ dispatch }))
 class Frame extends React.Component {
-	state = {
-		collapsed: false,
-		keyPath: [ '欢迎' ]
-	};
+	constructor(props) {
+		super();
+		const urlPath = props.router.location.pathname;
+		this.state = {
+			collapsed: false,
+			keyPath: urlPath === '/' ? [ '欢迎' ] : getParents(MENU_DOC, urlPath.substring(1))
+		};
+		this.urlPath = urlPath;
+	}
 
 	onCollapse = collapsed => this.setState({ collapsed });
 
 	render() {
-		const router = this.props.router;
+		console.log(this.state.keyPath);
+		const urlPath = this.urlPath;
 		const dispatch = this.props.dispatch;
 		//反序获取当前索引位置信息
 		const keyPath = [ ...this.state.keyPath ].reverse();
+		const [ selectedKeys, ...openKeys ] = keyPath;
 		const collapsed = this.state.collapsed;
 		return (
 			<Layout className={frameStyle.mainFrame}>
 				<Sider
 					className={frameStyle.sider}
-					theme="light"
+					theme="dark"
 					collapsible
 					collapsed={collapsed}
 					onCollapse={this.onCollapse}
 				>
 					<div className={frameStyle.logo}>
-						<div className={frameStyle.logoIcon} />
-						<div
-							className={classNames(frameStyle.logoName, {
-								[frameStyle.logoNameCollapsed]: collapsed
-							})}
-						>
-							测试系统
-						</div>
+						<a>
+							<div className={frameStyle.logoIcon} />
+							<span
+								className={classNames(frameStyle.logoName, {
+									[frameStyle.logoNameCollapsed]: collapsed
+								})}
+							>
+								测试系统
+							</span>
+						</a>
 					</div>
 					<PageMenu
+						theme="dark"
+						defaultSelectedKeys={selectedKeys}
+						defaultOpenKeys={openKeys}
 						onClick={({ item, key, keyPath }) =>
-							router.location.pathname === '/' + key ||
+							urlPath === '/' + key ||
 							//页面跳转
 							this.setState({ keyPath }, () => dispatch(push(key)))}
 						menuConfig={buildRelationFromDoc(MENU_DOC, MENU_CONFIG)}
 					/>
 				</Sider>
 				<Layout
-					className={classNames({
-						[frameStyle.pageWrapper]: !collapsed,
+					className={classNames(frameStyle.pageWrapper, {
 						[frameStyle.pageWrapperCollapsed]: collapsed
 					})}
 				>
@@ -88,6 +100,12 @@ class Frame extends React.Component {
 								path="/charts"
 								component={props => (
 									<Layout className={frameStyle.pageContent}>{<Charts />}</Layout>
+								)}
+							/>
+							<Route
+								path="/map"
+								component={props => (
+									<Layout className={frameStyle.pageContent}>{<GdMap />}</Layout>
 								)}
 							/>
 							<Route component={() => <div className={frameStyle.pageContent}>页面搭建中</div>} />

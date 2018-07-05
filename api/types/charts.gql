@@ -21,6 +21,8 @@ type BarChart {
 
 #饼图
 type PieChart {
+	#类别
 	name: String
+	#数据
 	value: Int
 }

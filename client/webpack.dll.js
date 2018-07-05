@@ -22,9 +22,11 @@ module.exports = {
 			'react-router',
 			'redux',
 			'react-redux',
+			'history',
 			'react-router-redux',
 			'redux-observable',
-			'rxjs'
+			'rxjs',
+			'axios'
 		]
 	},
 	output: {

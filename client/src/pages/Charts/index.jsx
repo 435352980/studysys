@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Layout, Button, Row, Col } from 'antd';
+import { Layout, Button, Row, Card } from 'antd';
 import ReactEcharts from 'echarts-for-react';
 import { fetchChartsData } from '../../actions/chartsAction';
 
@@ -9,8 +9,9 @@ const Content = Layout.Content;
 const Charts = ({ charts, dispatch }) => {
 	return (
 		<Content>
-			<Row>
+			<Row style={{ background: '#fff' }}>
 				<Button
+					style={{ margin: '16px 0 16px 16px' }}
 					onClick={() => {
 						dispatch(fetchChartsData());
 					}}
@@ -18,13 +19,12 @@ const Charts = ({ charts, dispatch }) => {
 					mock测试
 				</Button>
 			</Row>
-
-			<Row gutter={8}>
-				<Col xs={24}>
+			<Row>
+				<Card title="柱图">
 					<ReactEcharts
 						theme="vintage"
 						option={{
-							legend: { data: [ '柱图' ] },
+							legend: { data: [ '资源数' ] },
 							tooltip: {},
 							xAxis: {
 								type: 'category',
@@ -37,7 +37,7 @@ const Charts = ({ charts, dispatch }) => {
 								{
 									data: charts.barChart.data,
 									type: 'bar',
-									name: '柱图',
+									name: '资源数',
 									barMaxWidth: 50
 								}
 							]
@@ -49,15 +49,15 @@ const Charts = ({ charts, dispatch }) => {
 						lazyUpdate={true}
 						//showLoading={true}
 					/>
-				</Col>
+				</Card>
 			</Row>
-			<Row gutter={8}>
-				<Col xs={24}>
+			<Row>
+				<Card title="饼图">
 					<ReactEcharts
 						theme="vintage"
 						option={{
 							title: {
-								text: '饼图测试',
+								// text: '饼图测试',
 								// subtext: '纯属虚构',
 								x: 'center'
 							},
@@ -97,7 +97,7 @@ const Charts = ({ charts, dispatch }) => {
 						lazyUpdate={true}
 						//showLoading={true}
 					/>
-				</Col>
+				</Card>
 			</Row>
 		</Content>
 	);

@@ -24,7 +24,7 @@ const formatParentChunk = doc => {
  * 拆分doc段(xxx/xxx{...})格式
  * @param {*} doc 
  */
-function spliltDocChunk(doc) {
+export function spliltDocChunk(doc) {
 	var token = '', //读取缓存
 		times = 1, //循环次数
 		docLength = doc.length,
@@ -54,6 +54,21 @@ function spliltDocChunk(doc) {
 	}
 	return result;
 }
+
+export const getParents = (doc, name) => {
+	let result = [];
+	const chunks = spliltDocChunk(doc); //拆分doc
+	const chunk = chunks.find(chunk => chunk.includes(name)); //获取当前key所在chunk段
+	const paths = chunk.replace(/\s+/g, ' ').replace(/\s*\}/g, '').split(/\{\s*/g); //拆分路径层级
+	const nameIndex = paths.findIndex(value => value.includes(name)); //获取key所在层级
+	//从上至下构建父级数组
+	for (let i = 0; i < nameIndex; i++) {
+		const parentStart = paths[i].indexOf(' ');
+		result.push(parentStart === -1 ? paths[i] : paths[i].substring(parentStart + 1));
+	}
+	return [ ...result, name ];
+};
+
 /**
  * 判断token是否存在成对花括号
  * @param {*} token 
@@ -115,5 +130,4 @@ export const buildRelationFromDoc = (doc = '', nodes = [], ignore = true) => {
 	//return result;
 };
 
-const getAllFieldsFromDoc = doc =>
-	doc.replace(/(\s|\{|\})+/g, ' ').replace(/(^\s*)|(\s*$)/g, '').split(' ');
+const getAllFieldsFromDoc = doc => doc.replace(/(\s|\{|\})+/g, ' ').replace(/(^\s*)|(\s*$)/g, '').split(' ');
