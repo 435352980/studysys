@@ -7,6 +7,9 @@ const CleanPlugin = require('clean-webpack-plugin'); //打包时清除指定文�
 const HtmlPlugin = require('html-webpack-plugin'); //加载html模板，引入js文件
 const ProgressBarPlugin = require('progress-bar-webpack-plugin'); //命令行进度条插件
 
+const WebpackParallelUglifyPlugin = require('webpack-parallel-uglify-plugin'); //优化js
+const CopyWebpackPlugin = require('copy-webpack-plugin'); //复制文件到指定位置
+
 const HappyPack = require('HappyPack'); //多线程打包优化
 const threadPool = HappyPack.ThreadPool({ size: os.cpus().length }); //按cpu线程数指定线程数
 
@@ -17,11 +20,12 @@ const ROOT_DIR = __dirname;
 const SOURCE_DIR = path.resolve('./src');
 const NODE_MODULES_DIR = path.resolve('./node_modules');
 const BUILD_DIR = path.resolve('./build');
+const publicPath = 'http://localhost:8080/';
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 
 const devtool = isDevelopment ? { devtool: 'eval-source-map' } : null;
-const devServerConfig = isDevelopment ? { contentBase: path.join(BUILD_DIR) } : null; //静态文件根目录
+const devServerConfig = isDevelopment ? { contentBase: path.join(BUILD_DIR), publicPath } : null; //静态文件根目录
 
 const config = {
 	mode: process.env.NODE_ENV,
@@ -37,8 +41,8 @@ const config = {
 	},
 	output: {
 		path: BUILD_DIR,
-		filename: 'js/[name][chunkhash:16].js'
-		// publicPath : //可以用于配置CDN
+		filename: 'js/[name][chunkhash:16].js',
+		publicPath: '/'
 	},
 	devServer: { ...devServerConfig },
 	module: {
@@ -94,26 +98,26 @@ const config = {
 	//webpack4.x的最新优化配置项，用于提取公共代码
 	optimization: {
 		splitChunks: {
-			// chunks: 'initial', // 只对入口文件处理
+			//chunks: 'initial', // 只对入口文件处理
 			cacheGroups: {
 				// commons: {
-				// 	//chunks: 'initial', //表示显示块的范围，有三个可选值：initial(初始块)、async(按需加载块)、all(全部块)，默认为all;
-				// 	name: 'vendor', //拆分出来块的名字(Chunk Names)，默认由块名和hash值自动生成
+				// 	chunks: 'initial', //表示显示块的范围，有三个可选值：initial(初始块)、async(按需加载块)、all(全部块)，默认为all;
+				// 	name: 'common', //拆分出来块的名字(Chunk Names)，默认由块名和hash值自动生成
 				// 	minChunks: 2, //表示被引用次数，默认为1
 				// 	maxInitialRequests: 5, // The default limit is too small to showcase the effect
 				// 	minSize: 0, // 表示在压缩前的最小模块大小，默认为0
 				// 	reuseExistingChunk: true // 可设置是否重用该chunk（查看源码没有发现默认值）
 				// }
-				// // 将第三方模块提取出来
+				// 将第三方模块提取出来---针对多入口应用
 				//split `node_modules`目录下被打包的代码到 `vendor.js && .css` 没找到可打包文件的话，
 				//则没有。css需要依赖 `ExtractTextPlugin`
-				common: {
-					test: NODE_MODULES_DIR,
-					chunks: 'initial',
-					name: 'common',
-					priority: 10, // 优先
-					enforce: true
-				}
+				// commons: {
+				// 	test: NODE_MODULES_DIR,
+				// 	chunks: 'initial',
+				// 	name: 'common',
+				// 	priority: 10, // 优先
+				// 	enforce: true
+				// }
 			}
 		}
 	},
@@ -142,6 +146,26 @@ const config = {
 			dry: false, // 不要删除任何东西，主要用于测试.
 			exclude: [ 'vendor' ] // 排除不删除的目录，主要用于避免删除公用的文件
 		}),
+		new CopyWebpackPlugin([
+			{
+				from: path.join(SOURCE_DIR, 'assets'),
+				to: path.join(BUILD_DIR, 'assets')
+			}
+		]),
+		new WebpackParallelUglifyPlugin({
+			uglifyJS: {
+				output: {
+					beautify: false, //不需要格式化
+					comments: false //不保留注释
+				},
+				compress: {
+					warnings: false, // 在UglifyJs删除没有用到的代码时不输出警告
+					drop_console: true, // 删除所有的 `console` 语句，可以兼容ie浏览器
+					collapse_vars: true, // 内嵌定义了但是只用到一次的变量
+					reduce_vars: true // 提取出出现多次但是没有定义成变量去引用的静态值
+				}
+			}
+		}),
 		new webpack.DllReferencePlugin({
 			manifest: path.join(BUILD_DIR, 'vendor', 'manifest.json')
 		}),
@@ -153,7 +177,7 @@ const config = {
 			template: path.join(SOURCE_DIR, 'index.html'),
 			filename: 'index.html',
 			chunks: [ 'common', 'app' ],
-			vendor: 'vendor/vendor.dll.js',
+			vendor: '/vendor/vendor.dll.js', //注意publicPath
 			inject: 'body'
 		}),
 		new MiniCssExtractPlugin({

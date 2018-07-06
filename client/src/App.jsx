@@ -10,20 +10,23 @@ import { ConnectedRouter, routerMiddleware, routerReducer } from 'react-router-r
 import createBrowserHistory from 'history/createBrowserHistory';
 
 import chartsReducer from './reducers/chartsReducer';
+import vouchReducer from './reducers/vouchReducer';
 import chartsEpic from './epics/chartsEpic';
+import vouchEpic from './epics/vouchEpic';
 import './lib/vintage'; //引入Echarts主题
 import Frame from './pages/Frame';
+import './style.less';
 
 const history = createBrowserHistory();
 const rm = routerMiddleware(history);
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-const rootEpic = combineEpics(chartsEpic);
+const rootEpic = combineEpics(chartsEpic, vouchEpic);
 const epicMiddleware = createEpicMiddleware();
 
 const store = createStore(
-	combineReducers({ router: routerReducer, charts: chartsReducer }),
+	combineReducers({ router: routerReducer, charts: chartsReducer, vouch: vouchReducer }),
 	{},
 	composeEnhancers(applyMiddleware(rm, epicMiddleware))
 );

@@ -1,0 +1,17 @@
+query fetchVouchInfo {
+	vouchInfo {
+		header {
+			iwh
+			code
+			owh
+		}
+		details {
+			id
+			cat
+			model
+			color
+			qty
+			price
+		}
+	}
+}

@@ -10,7 +10,7 @@ export const API_PORT = 'http://localhost:3000';
  */
 export const MENU_CONFIG = [
 	{ key: 'report', name: '业务&报表', icon: 'table' },
-	{ key: 'vouch', name: '调拨业务' },
+	{ key: 'printVouch', name: '打印单据' },
 	{ key: 'ranking', name: '排名信息' },
 	{ key: 'charts', name: '图表', icon: 'pie-chart' },
 	{ key: 'map', name: '高德地图', icon: 'global' },
@@ -23,8 +23,8 @@ export const MENU_CONFIG = [
  * 菜单组合排序规则
  */
 export const MENU_DOC = `
-    map 
+	map 
+	report{ printVouch ranking } 
     manager{ depManage whManage } 
-    report{ vouch ranking } 
     charts 
 `;

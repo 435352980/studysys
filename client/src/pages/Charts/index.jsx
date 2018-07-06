@@ -9,7 +9,7 @@ const Content = Layout.Content;
 const Charts = ({ charts, dispatch }) => {
 	return (
 		<Content>
-			<Row style={{ background: '#fff' }}>
+			<Row className="bottomSpace" style={{ background: '#fff' }}>
 				<Button
 					style={{ margin: '16px 0 16px 16px' }}
 					onClick={() => {
@@ -19,7 +19,7 @@ const Charts = ({ charts, dispatch }) => {
 					mock测试
 				</Button>
 			</Row>
-			<Row>
+			<Row className="bottomSpace">
 				<Card title="柱图">
 					<ReactEcharts
 						theme="vintage"

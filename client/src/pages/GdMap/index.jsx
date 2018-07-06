@@ -148,7 +148,7 @@ export default class GdMap extends React.Component {
 							</Col>
 						</Row>
 					</div>
-					<div ref="map" style={{ height: 500 }} />
+					<div ref="map" style={{ height: 300 }} />
 				</Card>
 			</Content>
 		);

@@ -1,0 +1,23 @@
+type Query {
+	vouchInfo: VouchInfo
+}
+
+type VouchInfo {
+	header: VouchHeader
+	details: [VouchDetail]
+}
+
+type VouchHeader {
+	iwh: String
+	code: String
+	owh: String
+}
+
+type VouchDetail {
+	id: String
+	cat: String
+	model: String
+	color: String
+	qty: Int
+	price: Float
+}

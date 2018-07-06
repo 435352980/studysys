@@ -1,0 +1,22 @@
+//公共配置
+
+:global(.bottomSpace) {
+	margin-bottom: 16px;
+}
+
+:global(.amap-sug-result) {
+	display: none;
+}
+:global(.ant-layout-content .ant-row:last-child) {
+	margin-bottom: 0;
+}
+
+@media print {
+	:global(.printHide) {
+		visibility: hidden;
+	}
+	:global(.printInfo) {
+		page-break-after: avoid;
+		page-break-before: always;
+	}
+}

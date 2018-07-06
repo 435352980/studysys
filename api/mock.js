@@ -23,6 +23,22 @@ addMockFunctionsToSchema({
 				description: '@cparagraph',
 				role: '@boolean(1,6,false)'
 			}),
+		VouchInfo: () => ({
+			header: mock({
+				code: /\d{15}/,
+				iwh: '@city()仓库',
+				owh: '@city()仓库'
+			}),
+			details: () => new MockList(30)
+		}),
+		VouchDetail: () => ({
+			id: mock('@id'),
+			cat: mock('@pick(["类别1", "类别2", "类别3", "类别4"])'),
+			model: mock('@pick(["型号1", "型号2", "型号3", "型号4"])'),
+			color: mock('@pick(["颜色1","颜色2","颜色3"])'),
+			qty: mock('@integer(1,20)'),
+			price: mock('@float(200, 4000, 0, 2)')
+		}),
 		Charts: () => ({
 			pieChart: () => new MockList(8)
 		}),

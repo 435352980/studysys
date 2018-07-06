@@ -8,4 +8,6 @@
 后端接口配置为http://localhost:3000
 后端接口apidoc配置为http://localhost:3000/graphiql
 前端地址为http://localhost:8080
+## docker nginx启动(默认81端口)
+`cd ./client && docker-compose up -d`
 

@@ -12,30 +12,31 @@ import frameStyle from './frame.less';
 
 import Charts from '../Charts';
 import GdMap from '../GdMap';
+import PrintVouch from '../PrintVouch';
 
 const { Header, Content, Footer, Sider } = Layout;
 
 @connect(state => ({ router: state.router }), dispatch => ({ dispatch }))
 class Frame extends React.Component {
-	constructor(props) {
-		super();
-		const urlPath = props.router.location.pathname;
-		this.state = {
-			collapsed: false,
-			keyPath: urlPath === '/' ? [ '欢迎' ] : getParents(MENU_DOC, urlPath.substring(1))
-		};
-		this.urlPath = urlPath;
-	}
+	state = {
+		collapsed: false
+	};
 
 	onCollapse = collapsed => this.setState({ collapsed });
 
 	render() {
-		console.log(this.state.keyPath);
-		const urlPath = this.urlPath;
 		const dispatch = this.props.dispatch;
-		//反序获取当前索引位置信息
-		const keyPath = [ ...this.state.keyPath ].reverse();
-		const [ selectedKeys, ...openKeys ] = keyPath;
+		//获取路由地址
+		const pathKey = this.props.router.location.pathname.substring(1);
+		//直接键入地址时判断菜单地址是否存在
+		const hasThisMenu = MENU_CONFIG.find(({ key }) => key === pathKey);
+		//获取当前路由父级菜单信息
+		const breadcrumbs = pathKey === '' ? [ '欢迎' ] : hasThisMenu ? getParents(MENU_DOC, pathKey) : [];
+		// //反序层级得到Breadcrumb数据
+		const keysInfo = [ ...breadcrumbs ].reverse();
+		//获取默认展开菜单项，选中菜单项
+		const [ selectedKeys, ...openKeys ] = keysInfo;
+
 		const collapsed = this.state.collapsed;
 		return (
 			<Layout className={frameStyle.mainFrame}>
@@ -47,7 +48,7 @@ class Frame extends React.Component {
 					onCollapse={this.onCollapse}
 				>
 					<div className={frameStyle.logo}>
-						<a>
+						<a onClick={() => (window.location.href = '/')}>
 							<div className={frameStyle.logoIcon} />
 							<span
 								className={classNames(frameStyle.logoName, {
@@ -62,10 +63,15 @@ class Frame extends React.Component {
 						theme="dark"
 						defaultSelectedKeys={selectedKeys}
 						defaultOpenKeys={openKeys}
-						onClick={({ item, key, keyPath }) =>
-							urlPath === '/' + key ||
-							//页面跳转
-							this.setState({ keyPath }, () => dispatch(push(key)))}
+						//防止点击同一菜单造成非必要的二次加载
+						onClick={({ item, key }) => {
+							if (hasThisMenu) {
+								pathKey === key || dispatch(push(key));
+							} else {
+								const { host, port } = window.location;
+								window.location.href = `http://${host}/${key}`;
+							}
+						}}
 						menuConfig={buildRelationFromDoc(MENU_DOC, MENU_CONFIG)}
 					/>
 				</Sider>
@@ -75,21 +81,40 @@ class Frame extends React.Component {
 					})}
 				>
 					<Header className={frameStyle.header}>
-						<span className="ant-menu-item" onClick={() => dispatch(push('login'))}>
+						<span
+							className="ant-menu-item"
+							onClick={() => {
+								if (hasThisMenu) {
+									pathKey === key || dispatch(push('login'));
+								} else {
+									window.location.href = `http://${host}/login`;
+								}
+							}}
+						>
 							登录
 						</span>
-						<span className="ant-menu-item" onClick={() => dispatch(push('/signin'))}>
+						<span
+							className="ant-menu-item"
+							onClick={() => {
+								if (hasThisMenu) {
+									pathKey === key || dispatch(push('signin'));
+								} else {
+									window.location.href = `http://${host}/signin`;
+								}
+							}}
+						>
 							注册
 						</span>
 					</Header>
 					<Content className={frameStyle.content}>
 						<Breadcrumb className={frameStyle.breadcrumb}>
-							{keyPath.map(keyName => (
+							{breadcrumbs.map(keyName => (
 								<Breadcrumb.Item key={`br_${keyName}`}>
 									{(MENU_CONFIG.find(({ key }) => key === keyName) || {}).name || keyName}
 								</Breadcrumb.Item>
 							))}
 						</Breadcrumb>
+
 						<Switch>
 							<Route
 								exact
@@ -97,18 +122,27 @@ class Frame extends React.Component {
 								component={props => <Layout className={frameStyle.pageContent}>欢迎页</Layout>}
 							/>
 							<Route
+								exact
+								path="/printVouch"
+								component={props => (
+									<Layout className={frameStyle.pageContent}>{<PrintVouch />}</Layout>
+								)}
+							/>
+							<Route
+								exact
 								path="/charts"
 								component={props => (
 									<Layout className={frameStyle.pageContent}>{<Charts />}</Layout>
 								)}
 							/>
 							<Route
+								exact
 								path="/map"
 								component={props => (
 									<Layout className={frameStyle.pageContent}>{<GdMap />}</Layout>
 								)}
 							/>
-							<Route component={() => <div className={frameStyle.pageContent}>页面搭建中</div>} />
+							<Route component={() => <div className={frameStyle.pageContent}>404</div>} />
 						</Switch>
 					</Content>
 					<Footer className={frameStyle.footer}>Ant Design ©2016 Created by Ant UED</Footer>

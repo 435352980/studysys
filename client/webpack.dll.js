@@ -26,11 +26,16 @@ module.exports = {
 			'react-router-redux',
 			'redux-observable',
 			'rxjs',
-			'axios'
+			'axios',
+			'numeral',
+			'moment',
+			'bignumber.js',
+			'rc-print'
 		]
 	},
 	output: {
 		path: BUILD_DIR,
+		publicPath: '/',
 		filename: 'vendor/[name].dll.js',
 		library: '[name]_library'
 	},
