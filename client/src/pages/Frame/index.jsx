@@ -28,8 +28,10 @@ class Frame extends React.Component {
 		const dispatch = this.props.dispatch;
 		//获取路由地址
 		const pathKey = this.props.router.location.pathname.substring(1);
+		console.log(this.props.router.location.pathname);
+		console.log(pathKey);
 		//直接键入地址时判断菜单地址是否存在
-		const hasThisMenu = MENU_CONFIG.find(({ key }) => key === pathKey);
+		const hasThisMenu = pathKey === '' ? true : MENU_CONFIG.find(({ key }) => key === pathKey);
 		//获取当前路由父级菜单信息
 		const breadcrumbs = pathKey === '' ? [ '欢迎' ] : hasThisMenu ? getParents(MENU_DOC, pathKey) : [];
 		// //反序层级得到Breadcrumb数据

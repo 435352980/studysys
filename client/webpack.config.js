@@ -7,10 +7,9 @@ const CleanPlugin = require('clean-webpack-plugin'); //打包时清除指定文�
 const HtmlPlugin = require('html-webpack-plugin'); //加载html模板，引入js文件
 const ProgressBarPlugin = require('progress-bar-webpack-plugin'); //命令行进度条插件
 
-const WebpackParallelUglifyPlugin = require('webpack-parallel-uglify-plugin'); //优化js
 const CopyWebpackPlugin = require('copy-webpack-plugin'); //复制文件到指定位置
 
-const HappyPack = require('HappyPack'); //多线程打包优化
+const HappyPack = require('happypack'); //多线程打包优化
 const threadPool = HappyPack.ThreadPool({ size: os.cpus().length }); //按cpu线程数指定线程数
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin'); //替代extract-text-plugin但与happypack不兼容
@@ -51,7 +50,7 @@ const config = {
 				test: /\.(js|jsx)$/,
 				include: SOURCE_DIR,
 				exclude: NODE_MODULES_DIR,
-				use: { loader: 'HappyPack/loader', options: { id: 'jsx' } }
+				use: { loader: 'happypack/loader', options: { id: 'jsx' } }
 			},
 			{
 				test: /\.less$/,
@@ -152,20 +151,6 @@ const config = {
 				to: path.join(BUILD_DIR, 'assets')
 			}
 		]),
-		new WebpackParallelUglifyPlugin({
-			uglifyJS: {
-				output: {
-					beautify: false, //不需要格式化
-					comments: false //不保留注释
-				},
-				compress: {
-					warnings: false, // 在UglifyJs删除没有用到的代码时不输出警告
-					drop_console: true, // 删除所有的 `console` 语句，可以兼容ie浏览器
-					collapse_vars: true, // 内嵌定义了但是只用到一次的变量
-					reduce_vars: true // 提取出出现多次但是没有定义成变量去引用的静态值
-				}
-			}
-		}),
 		new webpack.DllReferencePlugin({
 			manifest: path.join(BUILD_DIR, 'vendor', 'manifest.json')
 		}),
