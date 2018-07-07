@@ -6,6 +6,8 @@ import { addMockFunctionsToSchema, MockList } from 'graphql-tools';
 import { mock } from 'mockjs';
 import schema from './schema';
 
+import { writeexcel } from './router';
+
 addMockFunctionsToSchema({
 	schema,
 	mocks: {
@@ -61,6 +63,8 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+app.use('/excel', writeexcel);
 
 app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));
 app.use('/graphql', graphqlExpress({ schema }));

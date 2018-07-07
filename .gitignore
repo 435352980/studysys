@@ -69,3 +69,7 @@ mongo/
 redis/
 yarn.lock
 study.md
+filename.js
+autorow.js
+ejsrow.sql
+~*.xlsx

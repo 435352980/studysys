@@ -13,6 +13,7 @@ import frameStyle from './frame.less';
 import Charts from '../Charts';
 import GdMap from '../GdMap';
 import PrintVouch from '../PrintVouch';
+import ExportExcel from '../ExportExcel';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -25,11 +26,10 @@ class Frame extends React.Component {
 	onCollapse = collapsed => this.setState({ collapsed });
 
 	render() {
+		const { host } = window.location;
 		const dispatch = this.props.dispatch;
 		//获取路由地址
 		const pathKey = this.props.router.location.pathname.substring(1);
-		console.log(this.props.router.location.pathname);
-		console.log(pathKey);
 		//直接键入地址时判断菜单地址是否存在
 		const hasThisMenu = pathKey === '' ? true : MENU_CONFIG.find(({ key }) => key === pathKey);
 		//获取当前路由父级菜单信息
@@ -66,11 +66,10 @@ class Frame extends React.Component {
 						defaultSelectedKeys={selectedKeys}
 						defaultOpenKeys={openKeys}
 						//防止点击同一菜单造成非必要的二次加载
-						onClick={({ item, key }) => {
+						onClick={({ key }) => {
 							if (hasThisMenu) {
 								pathKey === key || dispatch(push(key));
 							} else {
-								const { host, port } = window.location;
 								window.location.href = `http://${host}/${key}`;
 							}
 						}}
@@ -128,6 +127,13 @@ class Frame extends React.Component {
 								path="/printVouch"
 								component={props => (
 									<Layout className={frameStyle.pageContent}>{<PrintVouch />}</Layout>
+								)}
+							/>
+							<Route
+								exact
+								path="/exportExcel"
+								component={props => (
+									<Layout className={frameStyle.pageContent}>{<ExportExcel />}</Layout>
 								)}
 							/>
 							<Route
