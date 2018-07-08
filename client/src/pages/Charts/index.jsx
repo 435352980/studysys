@@ -12,6 +12,7 @@ const Charts = ({ charts, dispatch }) => {
 			<Row className="bottomSpace" style={{ background: '#fff' }}>
 				<Button
 					style={{ margin: '16px 0 16px 16px' }}
+					loading={charts.loading}
 					onClick={() => {
 						dispatch(fetchChartsData());
 					}}

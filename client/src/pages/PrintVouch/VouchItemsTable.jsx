@@ -11,6 +11,11 @@ export default class VouchItemsTable extends React.Component {
 		vouchItems: []
 	};
 
+	componentDidMount() {
+		const { vouchItems } = this.props;
+		this.setState({ vouchItems });
+	}
+
 	componentWillReceiveProps(nextProps) {
 		const { vouchItems } = nextProps;
 		//对比差异数据，更新并返回新数据

@@ -53,7 +53,7 @@ export default class PrintVouch extends React.Component {
 		const printType = this.state.printType;
 		// const header = this.props.header || {};
 		// const details = this.props.details || []; //数据
-		const { header, details } = this.props.vouch;
+		const { header, details, loading } = this.props.vouch;
 		const detailsSize = details.length; //总条数
 		let limit = 10; //每页显示条数
 		if (printType === '3' || printType === '5' || printType === '6') {
@@ -182,6 +182,7 @@ export default class PrintVouch extends React.Component {
 			<Content>
 				<Row style={{ background: '#fff', flexDirection: 'row' }} className="bottomSpace">
 					<Button
+						loading={loading}
 						style={{ margin: '16px 0 16px 16px' }}
 						onClick={() => this.props.dispatch(fetchVouchInfo())}
 					>
