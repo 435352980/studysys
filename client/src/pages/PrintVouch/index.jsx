@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Layout, Row, Menu, Dropdown, Button, Card } from 'antd';
+import { Layout, Row, Menu, Dropdown, Button, Icon, Card } from 'antd';
 import BigNumber from 'bignumber.js';
 import moment from 'moment';
 import Print from 'rc-print';
@@ -41,12 +41,22 @@ export default class PrintVouch extends React.Component {
 					this.setState({ printType: key }, () => this.refs.print.onPrint());
 				}}
 			>
-				<Menu.Item key="1">针式无价格无合计</Menu.Item>
-				<Menu.Item key="2">针式有价格有合计</Menu.Item>
-				<Menu.Item key="3">A4有价格有合计</Menu.Item>
-				<Menu.Item key="4">A4无价格有合计</Menu.Item>
+				<Menu.Item key="1">
+					<Icon type="printer" />针式无价格无合计
+				</Menu.Item>
+				<Menu.Item key="2">
+					<Icon type="printer" />针式有价格有合计
+				</Menu.Item>
+				<Menu.Item key="3">
+					<Icon type="printer" />A4有价格有合计
+				</Menu.Item>
+				<Menu.Item key="4">
+					<Icon type="printer" />A4无价格有合计
+				</Menu.Item>
 				{/* <Menu.Item key="5">针式有价格有合计24x28</Menu.Item> */}
-				<Menu.Item key="6">A4无价格有合计</Menu.Item>
+				<Menu.Item key="6">
+					<Icon type="printer" />A4无价格有合计
+				</Menu.Item>
 				{/* <Menu.Item key="7">针式珠宝24x14</Menu.Item> */}
 			</Menu>
 		);
@@ -183,13 +193,16 @@ export default class PrintVouch extends React.Component {
 				<Row style={{ background: '#fff', flexDirection: 'row' }} className="bottomSpace">
 					<Button
 						loading={loading}
+						type="primary"
 						style={{ margin: '16px 0 16px 16px' }}
 						onClick={() => this.props.dispatch(fetchVouchInfo())}
 					>
 						mock测试
 					</Button>
-					<Dropdown style={{ float: 'right' }} overlay={printMenu}>
-						<Button style={{ margin: '16px 0 16px 16px' }}>打印</Button>
+					<Dropdown style={{ float: 'right' }} overlay={printMenu} trigger={[ 'click' ]}>
+						<Button type="primary" style={{ margin: '16px 0 16px 16px' }}>
+							打印<Icon type="down" />
+						</Button>
 					</Dropdown>
 				</Row>
 				<Card>

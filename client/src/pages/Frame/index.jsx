@@ -16,11 +16,17 @@ import PrintVouch from '../PrintVouch';
 import ExportExcel from '../ExportExcel';
 import Login from '../Login';
 import Signin from '../Signin';
+import ChosenCheck from '../ChosenCheck';
+import Addlist from '../AddList';
 
 const { Header, Content, Footer, Sider } = Layout;
 
-//页面容器
-const Page = props => <Layout className={frameStyle.pageContent}>{props.children}</Layout>;
+//页面容器enhancer
+const page = Component => props => (
+	<Layout className={frameStyle.pageContent}>
+		<Component {...props} />
+	</Layout>
+);
 
 @connect(state => ({ user: state.login || {}, router: state.router }), dispatch => ({ dispatch }))
 class Frame extends React.Component {
@@ -40,6 +46,9 @@ class Frame extends React.Component {
 		if (pathKey === 'signin') {
 			return <Signin />;
 		}
+		// if (!this.props.user.login) {
+		// 	return <Login />;
+		// }
 		if (pathKey === 'login') {
 			return <Login />;
 		}
@@ -61,7 +70,8 @@ class Frame extends React.Component {
 		 */
 		const toUrl = urlKey => {
 			hasThisMenu
-				? pathKey === urlKey || dispatch(push(urlKey))
+				? //防止点击同一菜单造成非必要的二次加载
+					pathKey === urlKey || dispatch(push(urlKey))
 				: (window.location.href = `http://${host}/${urlKey}`);
 		};
 
@@ -75,7 +85,7 @@ class Frame extends React.Component {
 					onCollapse={this.onCollapse}
 				>
 					<div className={frameStyle.logo}>
-						<a onClick={() => (window.location.href = '/')}>
+						<a onClick={() => toUrl('')}>
 							<div className={frameStyle.logoIcon} />
 							<span
 								className={classNames(frameStyle.logoName, {
@@ -90,7 +100,6 @@ class Frame extends React.Component {
 						theme="dark"
 						defaultSelectedKeys={selectedKeys}
 						defaultOpenKeys={openKeys}
-						//防止点击同一菜单造成非必要的二次加载
 						onClick={({ key }) => toUrl(key)}
 						menuConfig={buildRelationFromDoc(MENU_DOC, MENU_CONFIG)}
 					/>
@@ -118,12 +127,14 @@ class Frame extends React.Component {
 							))}
 						</Breadcrumb>
 						<Switch>
-							<Route exact path="/" render={() => <Page>欢迎页</Page>} />
-							<Route exact path="/printVouch" render={() => <Page>{<PrintVouch />}</Page>} />
-							<Route exact path="/exportExcel" render={() => <Page>{<ExportExcel />}</Page>} />
-							<Route exact path="/charts" render={() => <Page>{<Charts />}</Page>} />
-							<Route exact path="/map" render={() => <Page>{<GdMap />}</Page>} />
-							<Route render={() => <Page>404</Page>} />
+							<Route exact path="/" render={page(() => <div>欢迎页</div>)} />
+							<Route exact path="/printVouch" render={page(PrintVouch)} />
+							<Route exact path="/exportExcel" render={page(ExportExcel)} />
+							<Route exact path="/charts" render={page(Charts)} />
+							<Route exact path="/map" render={page(GdMap)} />
+							<Route exact path="/chosenCheck" render={page(ChosenCheck)} />
+							<Route exact path="/addList" render={page(Addlist)} />
+							<Route render={page(() => <div>404</div>)} />
 						</Switch>
 					</Content>
 					<Footer className={frameStyle.footer}>Ant Design ©2016 Created by Ant UED</Footer>

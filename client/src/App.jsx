@@ -8,6 +8,7 @@ import { createEpicMiddleware, combineEpics } from 'redux-observable';
 import { withRouter } from 'react-router';
 import { ConnectedRouter, routerMiddleware, routerReducer } from 'react-router-redux';
 import createBrowserHistory from 'history/createBrowserHistory';
+// import createMemoryHistory from 'history/createMemoryHistory';
 
 import chartsReducer from './reducers/chartsReducer';
 import vouchReducer from './reducers/vouchReducer';
@@ -18,6 +19,7 @@ import Frame from './pages/Frame';
 import './style.less';
 
 const history = createBrowserHistory();
+// const history = createMemoryHistory();
 const rm = routerMiddleware(history);
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

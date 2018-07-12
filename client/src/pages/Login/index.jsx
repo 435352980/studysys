@@ -15,14 +15,9 @@ class Login extends React.Component {
 	render() {
 		const { form: { getFieldDecorator, validateFields }, user } = this.props;
 		return (
-			<Layout
-				className={style.loginContent}
-				style={{
-					alignContent: 'center',
-					justifyContent: 'center'
-				}}
-			>
+			<Layout className={style.loginContent}>
 				<Form
+					className={style.loginForm}
 					onSubmit={e => {
 						e.preventDefault();
 						validateFields((err, values) => {
@@ -35,25 +30,8 @@ class Login extends React.Component {
 							this.props.dispatch(push('/'));
 						});
 					}}
-					style={{
-						margin: '0 auto',
-						width: 360,
-						border: '1px solid #ededed',
-						borderRadius: 3,
-						boxShadow: '0 1px 3px rgba(0,0,0,.25)',
-						backgroundColor: '#FFF',
-						zIndex: 0
-					}}
 				>
-					<Header
-						style={{
-							backgroundColor: '#fff',
-							textAlign: 'center',
-							fontSize: '1.2rem'
-						}}
-					>
-						用户登录
-					</Header>
+					<Header className={style.loginHeader}>用户登录</Header>
 					<FormItem {...FormItemStyle}>
 						{getFieldDecorator('username', {
 							rules: [ { required: true, message: '请输入账号!' } ]

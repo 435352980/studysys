@@ -14,10 +14,9 @@ export const MENU_CONFIG = [
 	{ key: 'exportExcel', name: '导出excel' },
 	{ key: 'charts', name: '图表', icon: 'pie-chart' },
 	{ key: 'map', name: '高德地图', icon: 'global' },
-	{ key: 'manager', name: '管理', icon: 'appstore' },
-	{ key: 'userManage', name: '用户管理' },
-	{ key: 'depManage', name: '部门管理' },
-	{ key: 'whManage', name: '仓库管理' }
+	{ key: 'component', name: '组件测试', icon: 'appstore' },
+	{ key: 'chosenCheck', name: '多选组件' },
+	{ key: 'addList', name: '批量添加' }
 ];
 /**
  * 菜单组合排序规则
@@ -25,6 +24,6 @@ export const MENU_CONFIG = [
 export const MENU_DOC = `
 	map 
 	report{ printVouch exportExcel } 
-    manager{ depManage whManage } 
+    component{ chosenCheck addList } 
     charts 
 `;

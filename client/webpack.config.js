@@ -75,6 +75,16 @@ const config = {
 				exclude: path.join(NODE_MODULES_DIR, 'antd', 'es')
 			},
 			{
+				test: /\.css$/,
+				use: (isDevelopment ? [ 'css-hot-loader' ] : []).concat([
+					{ loader: MiniCssExtractPlugin.loader, options: { publicPath: '../' } },
+					{ loader: 'css-loader', options: { importLoaders: 1 } },
+					'postcss-loader'
+				]),
+				include: SOURCE_DIR,
+				exclude: path.join(NODE_MODULES_DIR, 'antd', 'es')
+			},
+			{
 				test: /\.(png|jpg|gif)$/,
 				use: [
 					{
@@ -110,13 +120,13 @@ const config = {
 				// 将第三方模块提取出来---针对多入口应用
 				//split `node_modules`目录下被打包的代码到 `vendor.js && .css` 没找到可打包文件的话，
 				//则没有。css需要依赖 `ExtractTextPlugin`
-				// commons: {
-				// 	test: NODE_MODULES_DIR,
-				// 	chunks: 'initial',
-				// 	name: 'common',
-				// 	priority: 10, // 优先
-				// 	enforce: true
-				// }
+				commons: {
+					test: NODE_MODULES_DIR,
+					chunks: 'initial',
+					name: 'common',
+					priority: 10, // 优先
+					enforce: true
+				}
 			}
 		}
 	},

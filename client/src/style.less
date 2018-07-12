@@ -11,6 +11,7 @@
 	margin-bottom: 0;
 }
 
+// 打印页隐藏
 @media print {
 	:global(.printHide) {
 		visibility: hidden;
@@ -19,4 +20,9 @@
 		page-break-after: avoid;
 		page-break-before: always;
 	}
+}
+
+//chrome打印改变height导致出现滚动条问题
+:global(body iframe:last-child) {
+	display: none;
 }

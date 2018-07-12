@@ -27,6 +27,7 @@ module.exports = {
 			'redux-observable',
 			'rxjs',
 			'axios',
+			'immutable',
 			'numeral',
 			'moment',
 			'bignumber.js',
