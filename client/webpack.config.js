@@ -19,22 +19,21 @@ const ROOT_DIR = __dirname;
 const SOURCE_DIR = path.resolve('./src');
 const NODE_MODULES_DIR = path.resolve('./node_modules');
 const BUILD_DIR = path.resolve('./build');
-const publicPath = 'http://localhost:8080/';
+const PUBLIC_PATH = 'http://localhost:8080/';
 
-const isDevelopment = process.env.NODE_ENV === 'development';
+const isDev = process.env.NODE_ENV === 'development';
 
-const devtool = isDevelopment ? { devtool: 'eval-source-map' } : null;
-const devServerConfig = isDevelopment ? { contentBase: path.join(BUILD_DIR), publicPath } : null; //静态文件根目录
+const jsonField = (name, value) => (value === null ? value : { [name]: value });
 
 const config = {
 	mode: process.env.NODE_ENV,
-	...devtool,
 	resolve: {
 		extensions: [ '.js', '.jsx', '.json', '.gql', '.less' ]
 	},
 	externals: {
 		echarts: 'echarts'
 	},
+	...jsonField('devtool', isDev ? 'eval-source-map' : null),
 	entry: {
 		app: path.join(SOURCE_DIR, 'App.jsx')
 	},
@@ -43,7 +42,7 @@ const config = {
 		filename: 'js/[name][chunkhash:16].js',
 		publicPath: '/'
 	},
-	devServer: { ...devServerConfig },
+	...jsonField('devServer', isDev ? { contentBase: BUILD_DIR, publicPath: PUBLIC_PATH } : null),
 	module: {
 		rules: [
 			{
@@ -54,33 +53,36 @@ const config = {
 			},
 			{
 				test: /\.less$/,
-				use: (isDevelopment ? [ 'css-hot-loader' ] : []).concat([
+				use: [
+					...(isDev ? [ 'css-hot-loader' ] : []),
 					{ loader: MiniCssExtractPlugin.loader, options: { publicPath: '../' } },
 					{ loader: 'css-loader', options: { importLoaders: 1 } },
 					'postcss-loader',
 					{ loader: 'less-loader', options: { javascriptEnabled: true } }
-				]),
+				],
 				include: path.join(NODE_MODULES_DIR, 'antd', 'es'),
 				exclude: SOURCE_DIR
 			},
 			{
 				test: /\.less$/,
-				use: (isDevelopment ? [ 'css-hot-loader' ] : []).concat([
+				use: [
+					...(isDev ? [ 'css-hot-loader' ] : []),
 					{ loader: MiniCssExtractPlugin.loader, options: { publicPath: '../' } },
 					{ loader: 'css-loader', options: { modules: true, importLoaders: 1 } },
 					'postcss-loader',
 					{ loader: 'less-loader', options: { javascriptEnabled: true } }
-				]),
+				],
 				include: SOURCE_DIR,
 				exclude: path.join(NODE_MODULES_DIR, 'antd', 'es')
 			},
 			{
 				test: /\.css$/,
-				use: (isDevelopment ? [ 'css-hot-loader' ] : []).concat([
+				use: [
+					...(isDev ? [ 'css-hot-loader' ] : []),
 					{ loader: MiniCssExtractPlugin.loader, options: { publicPath: '../' } },
 					{ loader: 'css-loader', options: { importLoaders: 1 } },
 					'postcss-loader'
-				]),
+				],
 				include: SOURCE_DIR,
 				exclude: path.join(NODE_MODULES_DIR, 'antd', 'es')
 			},
@@ -130,9 +132,8 @@ const config = {
 			}
 		}
 	},
-	plugins: (isDevelopment
-		? []
-		: [ new OptimizeCSSPlugin({ cssProcessorOptions: { safe: true } }) ]).concat([
+	plugins: [
+		...(isDev ? [] : [ new OptimizeCSSPlugin({ cssProcessorOptions: { safe: true } }) ]),
 		new HappyPack({
 			id: 'jsx',
 			threadPool: threadPool,
@@ -181,7 +182,7 @@ const config = {
 		new ProgressBarPlugin({
 			format: '  build [:bar] ' + chalk.green.bold(':percent') + ' (:elapsed seconds)'
 		})
-	])
+	]
 };
 
 module.exports = config;

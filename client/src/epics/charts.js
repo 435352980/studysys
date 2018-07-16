@@ -1,19 +1,18 @@
-import axios from 'axios';
 import { of, from } from 'rxjs';
 import { mergeMap, map, catchError, debounceTime } from 'rxjs/operators';
 import { ofType } from 'redux-observable';
-import { fetchChartsDataSucecess } from '../actions/chartsAction';
+import { charts as chartsAction } from '../actions';
 import { FETCH_CHARTSDATA, FETCH_CHARTSDATA_FAILED } from '../actions/types';
 import { API_PORT } from '../config';
 import chartsQuery from '../gql/charts';
 
-const chartsEpic = (action$, state$) =>
+const chartsEpic = (action$, state$, { axios }) =>
 	action$.pipe(
 		ofType(FETCH_CHARTSDATA),
 		debounceTime(500),
 		mergeMap(action =>
 			from(axios.post(`${API_PORT}/graphql`, { query: chartsQuery })).pipe(
-				map(response => fetchChartsDataSucecess(response.data.data.charts)),
+				map(response => chartsAction.fetchChartsDataSucecess(response.data.data.charts)),
 				catchError(error =>
 					of({
 						type: FETCH_CHARTSDATA_FAILED,
@@ -25,4 +24,4 @@ const chartsEpic = (action$, state$) =>
 		)
 	);
 
-export default chartsEpic;
+export default [ chartsEpic ];

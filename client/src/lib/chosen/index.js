@@ -42,7 +42,7 @@ export default class Chosen extends React.Component {
 
 	toggle = e => {
 		if (!(e.target.nodeName === 'ABBR')) {
-			this.refs.chosenResult.scroll({ top: 0 });
+			this.refs.chosenResult.scrollTop = 0;
 			this.setState({ showing: !this.state.showing });
 		}
 		this.setState({ container_active: true });

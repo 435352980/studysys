@@ -7,7 +7,7 @@ import Print from 'rc-print';
 import style from './printvouch.less';
 
 import VouchItemsTable from './VouchItemsTable';
-import { fetchVouchInfo } from '../../actions/vouchAction';
+import { vouch as vouchAction } from '../../actions';
 BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_HALF_EVEN, DECIMAL_PLACES: 2 });
 
 const Content = Layout.Content;
@@ -195,7 +195,7 @@ export default class PrintVouch extends React.Component {
 						loading={loading}
 						type="primary"
 						style={{ margin: '16px 0 16px 16px' }}
-						onClick={() => this.props.dispatch(fetchVouchInfo())}
+						onClick={() => this.props.dispatch(vouchAction.fetchVouchInfo())}
 					>
 						mock测试
 					</Button>

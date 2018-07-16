@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Layout, Button, Row, Card } from 'antd';
 import ReactEcharts from 'echarts-for-react';
-import { fetchChartsData } from '../../actions/chartsAction';
+import { charts as chartsActions } from '../../actions';
 
 const Content = Layout.Content;
 
@@ -14,7 +14,7 @@ const Charts = ({ charts, dispatch }) => {
 					style={{ margin: '16px 0 16px 16px' }}
 					// loading={charts.loading}
 					onClick={() => {
-						dispatch(fetchChartsData());
+						dispatch(chartsActions.fetchChartsData());
 					}}
 				>
 					mock测试

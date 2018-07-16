@@ -70,6 +70,7 @@ redis/
 yarn.lock
 study.md
 filename.js
+generateIndex.js
 autorow.js
 ejsrow.sql
 ~*.xlsx
