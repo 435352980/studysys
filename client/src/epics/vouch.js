@@ -6,7 +6,7 @@ import { FETCH_VOUCHINFO, FETCH_CHARTSDATA_FAILED } from '../actions/types';
 import { vouch as vouchAction } from '../actions';
 import vouchQuery from '../gql/vouch';
 
-const vouchEpic = (action$, state$, { axios }) =>
+export const vouchEpic = (action$, state$, { axios }) =>
 	action$.pipe(
 		ofType(FETCH_VOUCHINFO),
 		delay(500),
@@ -23,5 +23,3 @@ const vouchEpic = (action$, state$, { axios }) =>
 			)
 		)
 	);
-
-export default [ vouchEpic ];

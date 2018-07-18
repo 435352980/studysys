@@ -1,4 +1,4 @@
-import charts from './charts';
-import vouch from './vouch';
+import * as charts from './charts';
+import * as vouch from './vouch';
 
-export default [ ...charts, ...vouch ]
+export { charts, vouch };

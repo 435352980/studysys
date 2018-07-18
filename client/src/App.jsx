@@ -10,7 +10,7 @@ import { ConnectedRouter, routerMiddleware, routerReducer } from 'react-router-r
 import createBrowserHistory from 'history/createBrowserHistory';
 
 import * as reducers from './reducers';
-import epics from './epics';
+import * as epicsMap from './epics';
 import './lib/vintage'; //引入Echarts主题
 import Frame from './pages/Frame';
 import './style.less';
@@ -20,8 +20,12 @@ const history = createBrowserHistory();
 const rm = routerMiddleware(history);
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const allEpic = Object.values(epicsMap).reduce(
+	(preVal, nextVal) => preVal.concat(Object.values(nextVal)),
+	[]
+);
 
-const rootEpic = combineEpics(...epics);
+const rootEpic = combineEpics(...allEpic);
 const epicMiddleware = createEpicMiddleware({ dependencies: { axios } });
 
 const store = createStore(

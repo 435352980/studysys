@@ -141,7 +141,7 @@ const config = {
 				{
 					loader: 'babel-loader',
 					options: {
-						presets: [ 'react', [ 'env', { module: false } ], 'stage-0' ],
+						presets: [ 'react', [ 'env', { modules: false } ], 'stage-0' ],
 						plugins: [
 							'transform-decorators-legacy',
 							[ 'import', { libraryName: 'antd', libraryDirectory: 'es', style: true } ]

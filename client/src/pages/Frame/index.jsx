@@ -7,7 +7,7 @@ import { push } from 'react-router-redux';
 import classNames from 'classnames';
 import PageMenu from '../../components/PageMenu';
 import { MENU_CONFIG, MENU_DOC } from '../../config';
-import { buildRelationFromDoc, getParents } from '../../lib/relation';
+import { buildDocTree } from '../../lib/relation';
 import frameStyle from './frame.less';
 
 import Charts from '../Charts';
@@ -53,11 +53,17 @@ class Frame extends React.Component {
 			return <Login />;
 		}
 
-		//直接键入地址时判断菜单地址是否存在
-		const hasThisMenu = pathKey === '' ? true : MENU_CONFIG.find(({ key }) => key === pathKey);
-		//获取当前路由父级菜单信息
-		const breadcrumbs = pathKey === '' ? [ '欢迎' ] : hasThisMenu ? getParents(MENU_DOC, pathKey) : [];
+		const onHome = pathKey === ''; //当前是否首页
+		const hasThisMenu = onHome ? true : MENU_CONFIG[pathKey]; //直接键入地址时判断菜单地址是否存在
+		//构建菜单并获取当前路由父级菜单信息
+		let breadcrumbs = onHome ? [ '欢迎' ] : [];
+		const menuTree = buildDocTree(
+			MENU_CONFIG,
+			MENU_DOC,
+			onHome ? null : ({ key, paths }) => key === pathKey && (breadcrumbs = paths)
+		);
 		// //反序层级得到Breadcrumb数据
+		console.log(breadcrumbs);
 		const keysInfo = [ ...breadcrumbs ].reverse();
 		//获取默认展开菜单项，选中菜单项
 		const [ selectedKeys, ...openKeys ] = keysInfo;
@@ -101,7 +107,7 @@ class Frame extends React.Component {
 						defaultSelectedKeys={selectedKeys}
 						defaultOpenKeys={openKeys}
 						onClick={({ key }) => toUrl(key)}
-						menuConfig={buildRelationFromDoc(MENU_DOC, MENU_CONFIG)}
+						menuConfig={menuTree}
 					/>
 				</Sider>
 				<Layout
@@ -122,7 +128,7 @@ class Frame extends React.Component {
 						<Breadcrumb className={frameStyle.breadcrumb}>
 							{breadcrumbs.map(keyName => (
 								<Breadcrumb.Item key={`br_${keyName}`}>
-									{(MENU_CONFIG.find(({ key }) => key === keyName) || {}).name || keyName}
+									{MENU_CONFIG[keyName] ? MENU_CONFIG[keyName].name : keyName}
 								</Breadcrumb.Item>
 							))}
 						</Breadcrumb>

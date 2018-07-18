@@ -6,7 +6,7 @@ import { FETCH_CHARTSDATA, FETCH_CHARTSDATA_FAILED } from '../actions/types';
 import { API_PORT } from '../config';
 import chartsQuery from '../gql/charts';
 
-const chartsEpic = (action$, state$, { axios }) =>
+export const chartsEpic = (action$, state$, { axios }) =>
 	action$.pipe(
 		ofType(FETCH_CHARTSDATA),
 		debounceTime(500),
@@ -23,5 +23,3 @@ const chartsEpic = (action$, state$, { axios }) =>
 			)
 		)
 	);
-
-export default [ chartsEpic ];
