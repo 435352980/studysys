@@ -4,16 +4,28 @@ import { connect } from 'react-redux';
 import { Row, Col, Layout, Form, Input, Icon, Button, Checkbox, message } from 'antd';
 import style from './style.less';
 
+import { login as loginAction } from '../../actions';
+
 const Header = Layout.Header;
 const FormItem = Form.Item;
 const Footer = Layout.Footer;
 
-const FormItemStyle = { wrapperCol: { span: 18, offset: 3 } };
+const FormItemStyle = {
+	wrapperCol: {
+		// xs: { span: 6 },
+		sm: { offset: 2, span: 20 }
+	}
+};
 
-@connect(state => ({ user: state.user || {} }), dispatch => ({ dispatch }))
+@connect(state => ({ login: state.login }), dispatch => ({ dispatch }))
 class Login extends React.Component {
+	componentDidUpdate() {
+		const { login: { error } } = this.props;
+		error && message.info(error.message);
+	}
+
 	render() {
-		const { form: { getFieldDecorator, validateFields }, user } = this.props;
+		const { form: { getFieldDecorator, validateFields }, login, dispatch } = this.props;
 		return (
 			<Layout className={style.loginContent}>
 				<Form
@@ -25,9 +37,7 @@ class Login extends React.Component {
 								return console.log(err);
 							}
 							message.destroy();
-							message.info(JSON.stringify(values));
-							console.log(values);
-							this.props.dispatch(push('/'));
+							dispatch(loginAction.login(values));
 						});
 					}}
 				>

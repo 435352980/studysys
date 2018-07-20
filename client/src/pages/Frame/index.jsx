@@ -34,6 +34,8 @@ class Frame extends React.Component {
 		collapsed: false
 	};
 
+	componentWillMount() {}
+
 	onCollapse = collapsed => this.setState({ collapsed });
 
 	render() {
@@ -63,7 +65,7 @@ class Frame extends React.Component {
 			onHome ? null : ({ key, paths }) => key === pathKey && (breadcrumbs = paths)
 		);
 		// //反序层级得到Breadcrumb数据
-		console.log(breadcrumbs);
+		//console.log(breadcrumbs);
 		const keysInfo = [ ...breadcrumbs ].reverse();
 		//获取默认展开菜单项，选中菜单项
 		const [ selectedKeys, ...openKeys ] = keysInfo;

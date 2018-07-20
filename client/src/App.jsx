@@ -12,11 +12,11 @@ import createBrowserHistory from 'history/createBrowserHistory';
 import * as reducers from './reducers';
 import * as epicsMap from './epics';
 import './lib/vintage'; //引入Echarts主题
-import Frame from './pages/Frame';
 import './style.less';
 
+import Frame from './pages/Frame';
+
 const history = createBrowserHistory();
-// const history = createMemoryHistory();
 const rm = routerMiddleware(history);
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

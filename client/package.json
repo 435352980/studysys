@@ -11,7 +11,7 @@
 		"serve": "yarn build && serve -p 8080 ./build"
 	},
 	"dependencies": {
-		"antd": "^3.6.4",
+		"antd": "^3.7.0",
 		"axios": "^0.18.0",
 		"bignumber.js": "^7.2.1",
 		"classnames": "^2.2.6",
@@ -57,7 +57,7 @@
 		"optimize-css-assets-webpack-plugin": "^4.0.3",
 		"postcss-loader": "^2.1.5",
 		"progress-bar-webpack-plugin": "^1.11.0",
-		"serve": "^9.2.0",
+		"serve": "^9.3.0",
 		"style-loader": "^0.21.0",
 		"url-loader": "^1.0.1",
 		"webpack": "^4.13.0",
